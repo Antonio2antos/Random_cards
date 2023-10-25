@@ -1,0 +1,91 @@
+import random
+
+class Carta:
+    def __init__(self, naipe, valor):
+        self.naipe = naipe
+        self.valor = valor
+
+    def __str__(self):
+        return self.mostrar()
+
+    def mostrar(self):
+        if self.valor == 1:
+            val = "Ás"
+        elif self.valor == 11:
+            val = "Valete"
+        elif self.valor == 12:
+            val = "Dama"
+        elif self.valor == 13:
+            val = "Rei"
+        else:
+            val = self.valor
+
+        return "{} de {}".format(val, self.naipe)
+
+
+class Baralho:
+    def __init__(self):
+        self.cartas = []
+        self.criar()
+
+    def mostrar(self):
+        for carta in self.cartas:
+            print(carta.mostrar())
+
+    def criar(self):
+        self.cartas = []
+        naipes = ['Copas', 'Paus', 'Ouros', 'Espadas']
+        for naipe in naipes:
+            for valor in range(1, 14):
+                self.cartas.append(Carta(naipe, valor))
+
+    def embaralhar(self, num=1):
+        for _ in range(num):
+            for i in range(len(self.cartas) - 1, 0, -1):
+                randi = random.randint(0, i)
+                if i == randi:
+                    continue
+                self.cartas[i], self.cartas[randi] = self.cartas[randi], self.cartas[i]
+
+    def dar_carta(self):
+        return self.cartas.pop()
+
+
+class Jogador:
+    def __init__(self, nome):
+        self.nome = nome
+        self.mao = []
+
+    def dizer_ola(self):
+        print("Olá! Meu nome é {}".format(self.nome))
+        return self
+
+    def recebe(self, baralho, num=1):
+        for _ in range(num):
+            carta = baralho.dar_carta()
+            if carta:
+                self.mao.append(carta)
+            else:
+                return False
+        return True
+
+    def mostrar_mao(self):
+        print("Mão de {}: [{}]".format(self.nome, ", ".join(carta.mostrar() for carta in self.mao)))
+        return self
+    def descartar(self):
+        return self.mao.pop()
+
+# Testar a criação de uma Carta
+# carta = Carta('Espadas', 6)
+# print(carta)
+
+# Testar a criação de um Baralho
+meu_baralho = Baralho()
+meu_baralho.embaralhar()
+# meu_baralho.mostrar()
+
+João = Jogador("João")
+João.dizer_ola()
+João.recebe(meu_baralho, 5)
+João.mostrar_mao()
+
